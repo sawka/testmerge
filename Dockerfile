@@ -1,15 +1,12 @@
 FROM ubuntu:latest
 WORKDIR /app
 
-RUN apt-get update -y && \
-    apt-get upgrade -y && \
-    apt-get install -y golang-go nodejs npm && \
-    npm install -g corepack && \
-    corepack enable && \
-    yarn install && \
-    apt-get install -y libgtk2.0-0t64 libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb && \
-    export DISPLAY=:0 && \
-    service dbus start
+RUN apt update && \
+    apt install -y golang-go nodejs npm libgtk2.0-0t64 libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb && \
+    npm install -g corepack
+
+RUN corepack enable && \
+    yarn install
 
 RUN git clone https://github.com/scripthaus-dev/scripthaus.git
 WORKDIR /app/scripthaus
@@ -22,12 +19,7 @@ RUN mkdir waveterm
 
 WORKDIR /app/waveterm
 COPY . .
-RUN yarn cache clean
-RUN yarn
-RUN scripthaus run electron-rebuild
-RUN scripthaus run build-backend
-RUN scripthaus run webpack-watch
+ENV GOFLAGS="-buildvcs=false"
+ENV DISPLAY=":0"
 
-RUN useradd -m -s /bin/bash wave
-USER wave
-
+RUN useradd -ms /bin/bash wave

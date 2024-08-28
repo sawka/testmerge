@@ -7,13 +7,10 @@
         "vscode": {
             "settings": {
                 "terminal.integrated.shell.linux": "/bin/bash",
-                "extensions": [
-                    "golang.go",
-                    "dbaeumer.vscode-eslint",
-                    "esbenp.prettier-vscode"
-                ]
+                "extensions": ["golang.go", "dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
             }
         }
     },
-    "remoteUser": "wave"
+    "runServices": ["dbus"],
+    "postAttachCommand": "scripthaus run webpack-watch"
 }
